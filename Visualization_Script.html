@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Leaflet GeoJSON Example</title>
+  <title>Using leaflet to render Geoserver data request</title>
   <meta charset="utf-8" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,13 +20,25 @@
         <td id="all_manholes"></td>
       </tr>
       <tr>
-        <td>Manholes of size less than 160mm :</td>
-        <td id="hotel"></td>
+        <td>Manholes diameter 150mm :</td>
+        <td id="manholes_150"></td>
       </tr>
       <tr>
-        <td>Manholes of size less than 160mm:</td>
-        <td id="restaurant"></td>
+        <td>Manholes diameter 160mm :</td>
+        <td id="manholes_160"></td>
       </tr>
+      <tr>
+        <td>Manholes diameter 225mm :</td>
+        <td id="manholes_225"></td>
+      </tr>
+      <tr>
+        <td>Manholes diameter 315mm :</td>
+        <td id="manholes_315"></td>
+      </tr>
+      <tr>
+        <td>Manholes diameter 900mm :</td>
+        <td id="manholes_900"></td>
+      </tr>            
     </table>
 
   
@@ -45,6 +57,15 @@ geojson.addGeoJSON(data);
 var geoJsonUrl2 ="http://192.168.3.11/geoserver/wfs?service=wfs&version=1.0.0&request=Getfeature&typename=geonode:manhole&srsName=EPSG:32736&outputFormat=text/javascript&format_options=callback:getJson&callback=getJson";
 
 /////////////////////////////////
+//declare variables
+var diameter=150;
+var manholes_150MM= 0;
+var manholes_160MM= 0;
+var manholes_225MM= 0;
+var manholes_315MM= 0;
+var manholes_900MM= 0;
+
+//pull data from geoserver in GeoJson format
   $.ajax({
 
     type: 'GET',
@@ -56,20 +77,39 @@ var geoJsonUrl2 ="http://192.168.3.11/geoserver/wfs?service=wfs&version=1.0.0&re
 
                    success: function(data) {
                     //console.log(data)
-                    console.log(data.features.length)
+                    //console.log(data.features.length)
                     var no_of_all_manholes= data.totalFeatures;                    
-                    console.log("Total manhole: "+ " "+data.features)
+                    console.log(data.features[0].properties.size)
                     document.getElementById('all_manholes').innerText = no_of_all_manholes.toString();
-
-
-        }
+                    ////
+                     for(var i=0;i<no_of_all_manholes;i++){//loop thru all fields
+                     diameter= data.features[i].properties.size;                     
+                      //console.log(data.features[i].properties.size)
+                      if(diameter == "150MM") {
+                        manholes_150MM=manholes_150MM+1;
+                        }
+                      if(diameter == "160MM") {
+                        manholes_160MM=manholes_160MM+1;
+                        }
+                      if(diameter == "225MM") {
+                        manholes_225MM=manholes_225MM+1;
+                        }
+                      if(diameter == "315MM") {
+                        manholes_315MM=manholes_315MM+1;
+                        }
+                      if(diameter == "900MM") {
+                        manholes_900MM=manholes_900MM+1;
+                        }                                                                                                
+                    }
+                
+                document.getElementById('manholes_150').innerText = manholes_150MM.toString();
+                document.getElementById('manholes_160').innerText = manholes_160MM.toString();
+                document.getElementById('manholes_225').innerText = manholes_225MM.toString();
+                document.getElementById('manholes_315').innerText = manholes_315MM.toString();
+                document.getElementById('manholes_900').innerText = manholes_900MM.toString();  
+               }         
     })
-  /*
-$.getJSON("http://192.168.3.11/geoserver/wfs?service=wfs&version=1.0.0&request=Getfeature&typename=geonode:manhole&srsName=EPSG:32736&outputFormat=text/javascript&format_options=callback:getJson&callback=getJson",function(json){
-  console.log(json);
-});*/
-//////////////////////////////
-
+  console.log(manholes_150MM);
   </script>
 </body>
 </html>
