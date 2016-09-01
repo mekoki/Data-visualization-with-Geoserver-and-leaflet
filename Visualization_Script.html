@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet GeoJSON Example</title>
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+</head>
+
+<body>
+
+  <div id="map" style="width: 0px; height: 0px"></div>
+
+   <body>
+    <table id="info">
+      <tr>
+        <td>All Man holes:</td>
+        <td id="all_manholes"></td>
+      </tr>
+      <tr>
+        <td>Manholes of size less than 160mm :</td>
+        <td id="hotel"></td>
+      </tr>
+      <tr>
+        <td>Manholes of size less than 160mm:</td>
+        <td id="restaurant"></td>
+      </tr>
+    </table>
+
+  
+  <script src="https://npmcdn.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <script>
+  var map = L.map('map').setView([51.505, -0.09], 13);
+
+geojson = new L.GeoJSON();
+
+function loadGeoJson(data) {
+geojson.addGeoJSON(data);
+}
+
+var geoJsonUrl2 ="http://192.168.3.11/geoserver/wfs?service=wfs&version=1.0.0&request=Getfeature&typename=geonode:manhole&srsName=EPSG:32736&outputFormat=text/javascript&format_options=callback:getJson&callback=getJson";
+
+/////////////////////////////////
+  $.ajax({
+
+    type: 'GET',
+
+    url:geoJsonUrl2,
+
+    dataType: "jsonp",
+    jsonpCallback: 'getJson',
+
+                   success: function(data) {
+                    //console.log(data)
+                    console.log(data.features.length)
+                    var no_of_all_manholes= data.totalFeatures;                    
+                    console.log("Total manhole: "+ " "+data.features)
+                    document.getElementById('all_manholes').innerText = no_of_all_manholes.toString();
+
+
+        }
+    })
+  /*
+$.getJSON("http://192.168.3.11/geoserver/wfs?service=wfs&version=1.0.0&request=Getfeature&typename=geonode:manhole&srsName=EPSG:32736&outputFormat=text/javascript&format_options=callback:getJson&callback=getJson",function(json){
+  console.log(json);
+});*/
+//////////////////////////////
+
+  </script>
+</body>
+</html>
